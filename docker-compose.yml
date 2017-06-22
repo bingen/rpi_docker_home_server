@@ -1,0 +1,163 @@
+version: '3.1'
+services:
+  openldap:
+    build:
+      context: ./images/rpi-openldap/
+    image: bingen/rpi-openldap:latest
+    deploy:
+      replicas: 1
+    secrets:
+      - source: ldap_pwd
+        target: admin_pwd
+        uid: '999'
+        mode: 0440
+      - source: ldap_mail_pwd
+        target: mail_pwd
+        uid: '999'
+        mode: 0440
+      - source: ldap_nextcloud_pwd
+        target: nextcloud_pwd
+        uid: '999'
+        mode: 0440
+    # container_name: openldap
+    tty: true
+    stdin_open: true
+    env_file:
+      - openldap.env
+    networks:
+      - default
+    #ports:
+      #- "389:389"
+      #- "639:639"
+      #- "8080:80"
+    volumes:
+      - ${LDAP_DATA_PATH}:/var/lib/ldap
+      - ${LDAP_CONFIG_PATH}:/etc/ldap/slapd.d
+      - ${LDAP_CERTS_PATH}:/container/service/slapd/assets/certs/
+    hostname: openldap.${LDAP_DOMAIN}
+
+  db:
+    build:
+      context: ./images/rpi-mariadb/
+    image: bingen/rpi-mariadb:latest
+    deploy:
+      replicas: 1
+    secrets:
+      - source: db_pwd
+        target: admin_pwd
+        mode: 0440
+    environment:
+      - MYSQL_ROOT_PWD_FILE=/run/secrets/admin_pwd
+    #container_name: mariadb
+    networks:
+      - default
+    #ports:
+      #- "3306:3306"
+    volumes:
+      #- ${DB_CONFIG_PATH}:/etc/mysql
+      - ${DB_DATA_PATH}:/var/lib/mysql
+
+  haproxy:
+    build:
+      context: ./images/rpi-haproxy/
+    image: bingen/rpi-haproxy:latest
+    depends_on:
+      # For DNS resolution
+      - nextcloud
+    deploy:
+      replicas: 1
+    env_file:
+      - haproxy.env
+    networks:
+      - default
+    ports:
+      - "80:80"
+      - "443:443"
+  mail:
+    build:
+      context: ./images/rpi-email/
+    image: bingen/rpi-mailserver:latest
+    depends_on:
+      - openldap
+    deploy:
+      replicas: 1
+    secrets:
+      - source: ldap_mail_pwd
+        target: ldap_pwd
+        uid: '999'
+        mode: 0440
+    hostname: ${MAIL_HOSTNAME}.${MAIL_DOMAIN}
+    #domainname: ${MAIL_DOMAIN}
+    env_file:
+      - mail.env
+    networks:
+      - default
+    ports:
+      - "25:25"
+      - "143:143"
+      - "587:587"
+      - "993:993"
+    volumes:
+      - ${MAIL_DATA_VOLUME_PATH}:${MAIL_DATA_PATH}
+      #- ${MAIL_STATE_VOLUME_PATH}:${MAIL_STATE_PATH}
+    cap_add:
+      - NET_ADMIN
+
+  nextcloud:
+    build:
+      context: ./images/rpi-nextcloud/
+      args:
+        - NEXTCLOUD_VERSION=${NEXTCLOUD_VERSION}
+        - NEXTCLOUD_DATA_PATH=${NEXTCLOUD_DATA_PATH}
+    image: bingen/rpi-nextcloud:latest
+    depends_on:
+      - db
+      - openldap
+      #- haproxy
+    secrets:
+      - source: nextcloud_admin_pwd
+        target: admin_pwd
+        uid: '999'
+        mode: 0440
+      - source: ldap_nextcloud_pwd
+        target: ldap_pwd
+        uid: '999'
+        mode: 0440
+      - source: db_pwd
+        target: mysql_pwd
+        mode: 0440
+    env_file:
+      - nextcloud.env
+    networks:
+      - default
+    ports:
+      - "8000:80"
+      - "8443:443"
+    volumes:
+      - ${NEXTCLOUD_DATA_VOLUME_PATH}:${NEXTCLOUD_DATA_PATH}
+
+  #padlock:
+
+  #gitlab:
+
+  #turtl:
+
+  #wordpress:
+
+  #transmission:
+    #image: lsioarmhf/transmission:15.01.17
+
+secrets:
+  db_pwd:
+    external: true
+  ldap_pwd:
+    external: true
+  ldap_mail_pwd:
+    external: true
+  ldap_nextcloud_pwd:
+    external: true
+  nextcloud_admin_pwd:
+    external: true
+networks:
+  default:
+    driver: overlay
