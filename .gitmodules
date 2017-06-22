@@ -1,0 +1,6 @@
+[submodule "images/rpi-mariadb"]
+	path = images/rpi-mariadb
+	url = git@github.com:bingen/rpi-mariadb.git
+[submodule "rpi-nextcloud"]
+	path = rpi-nextcloud
+	url = git@github.com:bingen/rpi-nextcloud.git
