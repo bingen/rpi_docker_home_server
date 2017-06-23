@@ -255,5 +255,15 @@ to your docker swarm master node IP.
 TODO
 ----
 
+- Install and enable Nextcloud apps automatically
+- Let's Encrypt
+- DNS
+- XMPP
+- Wordpress
+- Gitlab
+- VPN
+- Opens social networks (GNU social, Diaspora)
+- Transmission
+- Sia storage
 - Use PHP7 for Nextcloud
 - Alternative: run your own registry for images.
