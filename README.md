@@ -150,6 +150,13 @@ From your current installation:
 Configuration and deployment
 ----------------------------
 
+First download the repos:
+
+    git@github.com:bingen/rpi_docker_home_server.git
+    git submodule update --init --recursive
+
+Set up your preferences:
+
     ./setup.sh
 
 (Optional, can be downloaded from registry, unless you changed them) Build aux images:
@@ -176,8 +183,7 @@ Other useful commands
     docker stack ls
     docker stack ps your-stack-name
 
-To see logs of a docker swarm/stack service:
-https://github.com/docker/docker/issues/23710
+To see logs of a docker swarm/stack service [reference](https://github.com/docker/docker/issues/23710):
 
     docker logs $(docker inspect --format "{{.Status.ContainerStatus.ContainerID}}" `docker stack ps your-stack-name | grep your-service-name | cut -f1 -d' '`)
 
@@ -205,7 +211,7 @@ Copy this into a file, `user_pwd.ldif`:
     dn: uniqueIdentifier=your-user,ou=people,dc=your-domain,dc=com
     changetype: modify
     replace: userPassword
-    userPassword: {SSHA}Rs60p+2QKxAFRnA6vtWV71SI6Jz57CDF
+    userPassword: {SSHA}Djpd2d+kbQm4ftHupSaS65wl8l8EbDot
 
 And the run:
 
@@ -213,7 +219,7 @@ And the run:
 
 You generate the password with:
 
-    slappaswwd -s your-password
+    slappasswd -s your-password
 
 MariaDB
 -------
@@ -223,7 +229,7 @@ If you have existing data, make sure root password matches and access from outsi
 Nextcloud
 ---------
 
-After first run, set DATA_CHOWN=0, explain why... (TODO)
+After first run, set DATA_CHOWN=0. Otherwise every time you deploy the whole folder with all your data will be recursed to change ownership, and it can take long when it's only needed for the first time.
 
 Need to log in as admin for the first time and enable Apps manually.
 
