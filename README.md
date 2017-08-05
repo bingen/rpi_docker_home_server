@@ -175,6 +175,10 @@ Deploy docker stack
 
     deploy.sh your-stack-name
 
+If you add or modify a service, you can update it running:
+
+    docker-compose build &&  docker push your-container && env $(cat .env | grep "^[A-Z]" | xargs)  docker stack deploy --compose-file docker-compose.yml your-stack
+
 Other useful commands
 ---------------------
 
