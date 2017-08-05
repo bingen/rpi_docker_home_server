@@ -200,6 +200,17 @@ To view swarm token:
 
     docker swarm join-token worker
 
+I was experience the issue described and fixed [here](Docker swarm nodes down after reboot!
+https://forums.docker.com/t/docker-worker-nodes-shown-as-down-after-re-start/22329/8?u=bingen):
+
+To avoid swarm nodes showing up as Down on reboot, you can do:
+
+    sudo crontab -e
+
+then add a line like this
+
+    @reboot docker ps
+
 Openldap
 --------
 

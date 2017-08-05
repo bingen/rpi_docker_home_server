@@ -19,3 +19,6 @@
 [submodule "images/rpi-nginx-php"]
 	path = images/rpi-nginx-php
 	url = git@github.com:bingen/rpi-nginx-php.git
+[submodule "images/rpi-zoneminder"]
+	path = images/rpi-zoneminder
+	url = git@github.com:bingen/rpi-zoneminder.git

@@ -54,6 +54,11 @@ if [[ ${#nextcloud_admin_pwd} -eq 0 ]]; then
     nextcloud_admin_pwd=`eval "$PWD_GEN"`
 fi
 
+read -p "Zoneminder Admin User Pwd (a random one will be generated if empty): " zoneminder_admin_pwd
+if [[ ${#zoneminder_admin_pwd} -eq 0 ]]; then
+    zoneminder_admin_pwd=`eval "$PWD_GEN"`
+fi
+
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"
 echo "///////////////// PLEASE CONFIRM /////////////////"
@@ -81,6 +86,7 @@ echo $ldap_pwd | docker secret create ldap_pwd -
 echo $ldap_mail_pwd | docker secret create ldap_mail_pwd -
 echo $ldap_nextcloud_pwd | docker secret create ldap_nextcloud_pwd -
 echo $nextcloud_admin_pwd | docker secret create nextcloud_admin_pwd -
+echo $zoneminder_admin_pwd | docker secret create zoneminder_admin_pwd -
 
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"
@@ -110,6 +116,7 @@ done;
 echo "\nNEXTCLOUD_DB_BACKUP=${NEXTCLOUD_DATA_PATH}/nextcloud_db_backup.sql" >> nextcloud.env
 echo "\nMAIL_DATA_PATH=${MAIL_DATA_PATH}" >> mail.env
 echo "\nNEXTCLOUD_DATA_PATH=${NEXTCLOUD_DATA_PATH}" >> nextcloud.env
+echo "\nNEXTCLOUD_BACKUP_PATH=${NEXTCLOUD_BACKUP_PATH}" >> nextcloud.env
 
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"
@@ -129,3 +136,4 @@ sudo mkdir -p ${MAIL_DATA_PATH}
 sudo mkdir -p ${MAIL_STATE_PATH}
 # nextcloud
 sudo mkdir -p ${NEXTCLOUD_DATA_PATH}
+sudo mkdir -p ${NEXTCLOUD_BACKUP_PATH}
