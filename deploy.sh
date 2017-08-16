@@ -17,6 +17,7 @@ docker push bingen/rpi-mariadb
 docker push bingen/rpi-haproxy
 docker push bingen/rpi-mailserver
 docker push bingen/rpi-nextcloud
+docker push bingen/rpi-zoneminder
 
 # Deploy Stack
 # seen here: https://github.com/docker/docker/issues/29133#issuecomment-278198683
