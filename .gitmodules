@@ -1,24 +1,24 @@
 [submodule "images/rpi-mariadb"]
 	path = images/rpi-mariadb
-	url = git@github.com:bingen/rpi-mariadb.git
+	url = https://github.com/bingen/rpi-mariadb.git
 [submodule "images/rpi-openldap"]
 	path = images/rpi-openldap
-	url = git@github.com:bingen/rpi-openldap.git
+	url = https://github.com/bingen/rpi-openldap.git
 [submodule "images/rpi-nextcloud"]
 	path = images/rpi-nextcloud
-	url = git@github.com:bingen/rpi-nextcloud.git
+	url = https://github.com/bingen/rpi-nextcloud.git
 [submodule "images/rpi-haproxy"]
 	path = images/rpi-haproxy
-	url = git@github.com:bingen/rpi-haproxy.git
+	url = https://github.com/bingen/rpi-haproxy.git
 [submodule "images/rpi-email"]
 	path = images/rpi-email
-	url = git@github.com:bingen/rpi-email.git
+	url = https://github.com/bingen/rpi-email.git
 [submodule "images/rpi-nginx"]
 	path = images/rpi-nginx
-	url = git@github.com:bingen/rpi-nginx.git
+	url = https://github.com/bingen/rpi-nginx.git
 [submodule "images/rpi-nginx-php"]
 	path = images/rpi-nginx-php
-	url = git@github.com:bingen/rpi-nginx-php.git
+	url = https://github.com/bingen/rpi-nginx-php.git
 [submodule "images/rpi-zoneminder"]
 	path = images/rpi-zoneminder
-	url = git@github.com:bingen/rpi-zoneminder.git
+	url = https://github.com/bingen/rpi-zoneminder.git
