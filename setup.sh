@@ -105,6 +105,7 @@ cp env.template .env
 cp openldap.env.template openldap.env
 cp mail.env.template mail.env
 cp nextcloud.env.template nextcloud.env
+cp zoneminder.env.template zoneminder.env
 cp haproxy.env.template haproxy.env
 
 for i in `ls *.env .env`; do

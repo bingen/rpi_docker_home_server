@@ -152,6 +152,7 @@ services:
       args:
         - ZONEMINDER_DATA_PATH=${ZONEMINDER_DATA_PATH}
     image: bingen/rpi-zoneminder:latest
+    shm_size: 256M
     depends_on:
       - db
       #- haproxy

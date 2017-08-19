@@ -173,9 +173,9 @@ Set up your preferences:
 
     docker-compose build
 
-Deploy docker stack
+Deploy docker stack (it will also rebuild components)
 
-    deploy.sh your-stack-name
+    ./deploy.sh your-stack-name
 
 If you add or modify a service, you can update it running:
 
