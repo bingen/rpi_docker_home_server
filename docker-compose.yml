@@ -127,6 +127,14 @@ services:
       - source: db_pwd
         target: mysql_pwd
         mode: 0440
+      - source: nextcloud_salt
+        target: salt
+        uid: '999'
+        mode: 0440
+      - source: nextcloud_secret
+        target: secret
+        uid: '999'
+        mode: 0440
     env_file:
       - nextcloud.env
     networks:
@@ -186,6 +194,10 @@ secrets:
   ldap_nextcloud_pwd:
     external: true
   nextcloud_admin_pwd:
+    external: true
+  nextcloud_salt:
+    external: true
+  nextcloud_secret:
     external: true
   zoneminder_admin_pwd:
     external: true
