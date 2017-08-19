@@ -152,7 +152,8 @@ Configuration and deployment
 
 First download the repos:
 
-    git@github.com:bingen/rpi_docker_home_server.git
+    git clone https://github.com/bingen/rpi_docker_home_server.git
+    cd rpi_docker_home_server
     git submodule update --init --recursive
 
 Set up your preferences:
@@ -161,10 +162,11 @@ Set up your preferences:
 
 (Optional, can be downloaded from registry, unless you changed them) Build aux images:
 
-    cd ~/docker_home_server/images/rpi-nginx
+    cd images/rpi-nginx
     docker build . -t bingen/rpi-nginx
-    cd ~/docker_home_server/images/rpi-nginx-php5
-    docker build . -t bingen/rpi-nginx-php5
+    cd ../../
+    cd images/rpi-nginx-php
+    docker build . -t bingen/rpi-nginx-php
     cd ../../
 
 (Optional, can be downloaded from registry, unless you changed them) Build images:
