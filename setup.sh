@@ -141,7 +141,11 @@ sudo mkdir -p ${DB_DATA_PATH}
 #sudo mkdir -p ${DB_CONFIG_PATH}
 # mail
 sudo mkdir -p ${MAIL_DATA_PATH}
+sudo mkdir -p ${MAIL_DATA_PATH}/getmail
 #sudo mkdir -p ${MAIL_STATE_PATH}
 # nextcloud
 sudo mkdir -p ${NEXTCLOUD_DATA_PATH}
 sudo mkdir -p ${NEXTCLOUD_BACKUP_PATH}
+
+echo "Copying gemail confs"
+cp images/rpi-email/getmail/getmailrc-* ${MAIL_DATA_PATH}/getmail/

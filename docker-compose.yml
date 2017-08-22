@@ -99,6 +99,7 @@ services:
       - "993:993"
     volumes:
       - ${MAIL_DATA_VOLUME_PATH}:${MAIL_DATA_PATH}
+      - ${MAIL_GETMAIL_VOLUME_PATH}:${MAIL_GETMAIL_PATH}
       #- ${MAIL_STATE_VOLUME_PATH}:${MAIL_STATE_PATH}
     cap_add:
       - NET_ADMIN
