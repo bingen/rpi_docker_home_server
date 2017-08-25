@@ -146,37 +146,7 @@ services:
       - ${NEXTCLOUD_DATA_VOLUME_PATH}:${NEXTCLOUD_DATA_PATH}
       - ${NEXTCLOUD_BACKUP_VOLUME_PATH}:${NEXTCLOUD_BACKUP_PATH}
 
-  zoneminder:
-    build:
-      context: ./images/rpi-zoneminder/
-      args:
-        - ZONEMINDER_DATA_PATH=${ZONEMINDER_DATA_PATH}
-    image: bingen/rpi-zoneminder:latest
-    shm_size: 256M
-    depends_on:
-      - db
-      #- haproxy
-    secrets:
-      - source: zoneminder_admin_pwd
-        target: admin_pwd
-        uid: '999'
-        mode: 0440
-      - source: db_pwd
-        target: mysql_pwd
-        mode: 0440
-    env_file:
-      - zoneminder.env
-    networks:
-      - default
-    ports:
-      - "8001:80"
-      - "8444:443"
-    #volumes:
-      #- ${ZONEMINDER_DATA_VOLUME_PATH}:${ZONEMINDER_DATA_PATH}
-
-  #padlock:
-
-  #gitlab:
+  #gogs:
 
   #turtl:
 
@@ -199,8 +169,6 @@ secrets:
   nextcloud_salt:
     external: true
   nextcloud_secret:
-    external: true
-  zoneminder_admin_pwd:
     external: true
 networks:
   default:
