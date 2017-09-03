@@ -30,3 +30,4 @@ sleep 60
 # ##### Add users to LDAP ###### #
 
 ./add_users.sh ${STACK_NAME}
+./letsencrypt.sh ${STACK_NAME}
