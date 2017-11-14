@@ -1,7 +1,10 @@
 #!/bin/bash
 
 STACK_NAME=$1
-
+BUILD=$2
+if [ -z $BUILD ]; then
+    BUILD=1;
+fi
 if [ $# -eq 0 ]; then
     echo "You must pass stack name as a parameter"
     exit 1
@@ -11,13 +14,15 @@ fi
 docker stack rm ${STACK_NAME}
 
 # Build images
-docker-compose build
-docker push bingen/rpi-openldap
-docker push bingen/rpi-mariadb
-docker push bingen/rpi-haproxy
-docker push bingen/rpi-mailserver
-docker push bingen/rpi-nextcloud
-docker push bingen/rpi-zoneminder
+if [ $BUILD -eq 1 ]; then
+    docker-compose build
+    docker push bingen/rpi-openldap
+    docker push bingen/rpi-mariadb
+    docker push bingen/rpi-haproxy
+    docker push bingen/rpi-mailserver
+    docker push bingen/rpi-nextcloud
+    docker push bingen/rpi-zoneminder
+fi
 
 # Deploy Stack
 # seen here: https://github.com/docker/docker/issues/29133#issuecomment-278198683
@@ -30,4 +35,29 @@ sleep 60
 # ##### Add users to LDAP ###### #
 
 ./add_users.sh ${STACK_NAME}
+
+# Wait for Nextcloud
+NC_UP=0
+while [ $NC_UP -eq 0 ]; do
+    # TODO: Use docker inspect Go templates
+    #NC_IP=$(docker network inspect debuen_default | grep -A 3 nextcloud | grep IPv4Address | cut -d':' -f 2 | cut -d'"' -f 2 | cut -d'/' -f 1)
+    # Find Nextcloud container
+    SERVICE=nextcloud
+    host=$(docker stack ps ${STACK_NAME} | grep Running | grep ${SERVICE} | awk '{ print $4 }')
+    #echo Host=$host
+    if [ -z $host ]; then
+        echo "No host found!";
+        continue;
+    fi
+    container=$(ssh $host 'docker ps | grep '${SERVICE}' | cut -f1 -d" "')
+    #echo Container=$container
+    if [ -z $container ]; then
+        echo "Qué me estás container?!";
+        continue;
+    fi
+    NC_IP=$(ssh $host "docker exec ${container} sh -c 'ifconfig eth1' | grep 'inet ' | cut -d':' -f 2 | cut -d' ' -f 1")
+    curl http://${NC_IP}/index.nginx-debian.html 2>/dev/null | grep title | grep Welcome 1>/dev/null;
+    NC_UP=$((1 - $?));
+done;
+
 ./letsencrypt.sh ${STACK_NAME}
