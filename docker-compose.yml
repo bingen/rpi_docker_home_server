@@ -4,8 +4,6 @@ services:
     build:
       context: ./images/rpi-openldap/
     image: bingen/rpi-openldap:latest
-    deploy:
-      replicas: 1
     secrets:
       - source: ldap_pwd
         target: admin_pwd
@@ -31,17 +29,15 @@ services:
       #- "639:639"
       #- "8080:80"
     volumes:
-      - ${LDAP_DATA_PATH}:/var/lib/ldap
-      - ${LDAP_CONFIG_PATH}:/etc/ldap/slapd.d
-      - ${LDAP_CERTS_PATH}:/container/service/slapd/assets/certs/
+      - ${LDAP_DATA_VOLUME_PATH}:/var/lib/ldap
+      - ${LDAP_CONFIG_VOLUME_PATH}:/etc/ldap/slapd.d
+      - ${LDAP_CERTS_VOLUME_PATH}:/container/service/slapd/assets/certs/
     hostname: openldap.${LDAP_DOMAIN}
 
   db:
     build:
       context: ./images/rpi-mariadb/
     image: bingen/rpi-mariadb:latest
-    deploy:
-      replicas: 1
     secrets:
       - source: db_pwd
         target: admin_pwd
@@ -54,8 +50,8 @@ services:
     #ports:
       #- "3306:3306"
     volumes:
-      #- ${DB_CONFIG_PATH}:/etc/mysql
-      - ${DB_DATA_PATH}:/var/lib/mysql
+      #- ${DB_CONFIG_VOLUME_PATH}:/etc/mysql
+      - ${DB_DATA_VOLUME_PATH}:/var/lib/mysql
 
   haproxy:
     build:
@@ -64,8 +60,6 @@ services:
     depends_on:
       # For DNS resolution
       - nextcloud
-    deploy:
-      replicas: 1
     env_file:
       - haproxy.env
     networks:
@@ -79,8 +73,6 @@ services:
     image: bingen/rpi-mailserver:latest
     depends_on:
       - openldap
-    deploy:
-      replicas: 1
     secrets:
       - source: ldap_mail_pwd
         target: ldap_pwd
@@ -146,9 +138,31 @@ services:
       - ${NEXTCLOUD_DATA_VOLUME_PATH}:${NEXTCLOUD_DATA_PATH}
       - ${NEXTCLOUD_BACKUP_VOLUME_PATH}:${NEXTCLOUD_BACKUP_PATH}
 
-  #gogs:
+  paperless:
+    build:
+      context: ./images/rpi-paperless/
+    image: bingen/rpi-paperless
+    ports:
+      - "8081:8000"
+      - "21:21"
+    volumes:
+      - ${PAPERLESS_DATA_VOLUME_PATH}:/usr/src/paperless/data
+      - ${PAPERLESS_MEDIA_VOLUME_PATH}:/usr/src/paperless/media
+      - ${PAPERLESS_CONSUMPTION_VOLUME_PATH}:${PAPERLESS_CONSUMPTION_PATH}
+      - ${PAPERLESS_EXPORT_VOLUME_PATH}:${PAPERLESS_EXPORT_PATH}
+    secrets:
+      - source: paperless_webserver_pwd
+        target: webserver_pwd
+        uid: '999'
+        mode: 0440
+      - source: paperless_passphrase
+        target: passphrase
+        uid: '999'
+        mode: 0440
+    env_file:
+      - paperless.env
 
-  #turtl:
+  #gogs:
 
   #wordpress:
 
@@ -169,6 +183,10 @@ secrets:
   nextcloud_salt:
     external: true
   nextcloud_secret:
+    external: true
+  paperless_webserver_pwd:
+    external: true
+  paperless_passphrase:
     external: true
 networks:
   default:

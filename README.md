@@ -238,6 +238,11 @@ You generate the password with:
 
     slappasswd -s your-password
 
+You can use the following script to add users if you have previously created `ldif` files:
+
+    ./add_users <your-stack-name>
+
+
 MariaDB
 -------
 
@@ -249,6 +254,12 @@ Nextcloud
 After first run, set DATA_CHOWN=0. Otherwise every time you deploy the whole folder with all your data will be recursed to change ownership, and it can take long when it's only needed for the first time.
 
 Need to log in as admin for the first time and enable Apps manually.
+
+Let's Encrypt
+-------------
+Run the following script to enable Let's Encrypt for Nextcloud:
+
+    ./letsencrypt.sh <your-stack-name>
 
 Dynamic DNS
 -----------
