@@ -19,3 +19,6 @@
 [submodule "images/rpi-nginx-php"]
 	path = images/rpi-nginx-php
 	url = https://github.com/bingen/rpi-nginx-php.git
+[submodule "images/rpi-paperless"]
+	path = images/rpi-paperless
+	url = git@github.com:bingen/rpi-paperless.git
