@@ -145,6 +145,8 @@ services:
     ports:
       - "8081:8000"
       - "21:21"
+      - "20:20"
+      - "21100-21110:21100-21110"
     volumes:
       - ${PAPERLESS_DATA_VOLUME_PATH}:/usr/src/paperless/data
       - ${PAPERLESS_MEDIA_VOLUME_PATH}:/usr/src/paperless/media
@@ -157,6 +159,10 @@ services:
         mode: 0440
       - source: paperless_passphrase
         target: passphrase
+        uid: '999'
+        mode: 0440
+      - source: paperless_ftp_pwd
+        target: ftp_pwd
         uid: '999'
         mode: 0440
     env_file:
@@ -187,6 +193,8 @@ secrets:
   paperless_webserver_pwd:
     external: true
   paperless_passphrase:
+    external: true
+  paperless_ftp_pwd:
     external: true
 networks:
   default:

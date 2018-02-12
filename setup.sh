@@ -79,6 +79,16 @@ if [[ ${#paperless_passphrase} -eq 0 ]]; then
     paperless_=`eval "$PWD_GEN"`
 fi
 
+read -p "Paperless FTP User (consume): " paperless_ftp_user
+if [[ ${#paperless_ftp_user} -eq 0 ]]; then
+    paperless_ftp_user=consume
+fi
+
+read -p "Paperless FTP Pwd (a random one will be generated if empty): " paperless_ftp_pwd
+if [[ ${#paperless_ftp_pwd} -eq 0 ]]; then
+    paperless_ftp_pwd=`eval "$PWD_GEN"`
+fi
+
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"
 echo "///////////////// PLEASE CONFIRM /////////////////"
@@ -90,7 +100,8 @@ echo Your Volumes path is:                 $volumes
 echo Your LDAP Mail Bind DN Uid is:        $ldap_mail_uid
 echo Your LDAP Nextcloud Bind DN Uid is:   $ldap_nextcloud_uid
 echo Your Let\'s Encrypt account e-mail:   $letsencrypt_email
-echo Your PAperless Web Server User:       $paperless_webserver_user
+echo Your Paperless Web Server User:       $paperless_webserver_user
+echo Your Paperless FTP User:              $paperless_ftp_user
 
 echo $'\E[1;37m'
 read -p "Are These Settings Correct? Yes (y), No (n): " confirm
@@ -112,6 +123,7 @@ echo $nextcloud_salt | docker secret create nextcloud_salt -
 echo $nextcloud_secret | docker secret create nextcloud_secret -
 echo $paperless_webserver_pwd | docker secret create paperless_webserver_pwd -
 echo $paperless_passphrase | docker secret create paperless_passphrase -
+echo $paperless_ftp_pwd | docker secret create paperless_ftp_pwd -
 
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"
@@ -135,6 +147,7 @@ for i in `ls *.env .env`; do
     sed -i "s/\${NEXTCLOUD_LDAP_UID}/${ldap_nextcloud_uid}/g" $i
     sed -i "s/\${LETSENCRYPT_EMAIL}/${letsencrypt_email}/g" $i
     sed -i "s/\${PAPERLESS_WEBSERVER_USER}/${paperless_webserver_user}/g" $i
+    sed -i "s/\${PAPERLESS_FTP_USER}/${paperless_ftp_user}/g" $i
     #sed -i "s/\${}/${}/g" $i
 done;
 
