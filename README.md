@@ -112,6 +112,16 @@ Add to /etc/fstab:
 
 Repeat for worker nodes (changing name of swap file)
 
+Avahi
+-----
+
+When the dockers are running, some service users (e.g. `dovecot` or `mysqld`) can have conflicting ids with the one of avahi, making it fail. To avoid that, we can just increase its `uid`, e.g.:
+
+    sudo usermod -u 205 avahi
+    sudo service dbus restart
+    sudo service avahi restart
+
+
 Swarm
 -----
 
