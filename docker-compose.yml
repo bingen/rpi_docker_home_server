@@ -144,9 +144,7 @@ services:
     image: bingen/rpi-paperless
     ports:
       - "8081:8000"
-      - "21:21"
-      - "20:20"
-      - "21100-21110:21100-21110"
+      - "1022:22"
     volumes:
       - ${PAPERLESS_DATA_VOLUME_PATH}:/usr/src/paperless/data
       - ${PAPERLESS_MEDIA_VOLUME_PATH}:/usr/src/paperless/media
