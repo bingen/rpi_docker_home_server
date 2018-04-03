@@ -22,3 +22,6 @@
 [submodule "images/rpi-paperless"]
 	path = images/rpi-paperless
 	url = git@github.com:bingen/rpi-paperless.git
+[submodule "images/rpi-sftp"]
+	path = images/rpi-sftp
+	url = git@github.com:bingen/rpi-sftp.git

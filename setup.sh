@@ -79,12 +79,12 @@ if [[ ${#paperless_passphrase} -eq 0 ]]; then
     paperless_=`eval "$PWD_GEN"`
 fi
 
-read -p "Paperless FTP User (consume): " paperless_ftp_user
+read -p "SFTP User - SFTP server is used by paperless (consume): " paperless_ftp_user
 if [[ ${#paperless_ftp_user} -eq 0 ]]; then
     paperless_ftp_user=consume
 fi
 
-read -p "Paperless FTP Pwd (a random one will be generated if empty): " paperless_ftp_pwd
+read -p "SFTP Pwd (a random one will be generated if empty): " paperless_ftp_pwd
 if [[ ${#paperless_ftp_pwd} -eq 0 ]]; then
     paperless_ftp_pwd=`eval "$PWD_GEN"`
 fi
@@ -101,7 +101,7 @@ echo Your LDAP Mail Bind DN Uid is:        $ldap_mail_uid
 echo Your LDAP Nextcloud Bind DN Uid is:   $ldap_nextcloud_uid
 echo Your Let\'s Encrypt account e-mail:   $letsencrypt_email
 echo Your Paperless Web Server User:       $paperless_webserver_user
-echo Your Paperless FTP User:              $paperless_ftp_user
+echo Your SFTP User:                       $paperless_ftp_user
 
 echo $'\E[1;37m'
 read -p "Are These Settings Correct? Yes (y), No (n): " confirm
@@ -137,6 +137,7 @@ cp mail.env.template mail.env
 cp nextcloud.env.template nextcloud.env
 cp haproxy.env.template haproxy.env
 cp paperless.env.template paperless.env
+cp sftp.env.template sftp.env
 
 for i in `ls *.env .env`; do
     sed -i "s/\${DOMAIN}/${domain}/g" $i
@@ -158,8 +159,9 @@ echo "\nMAIL_DATA_PATH=${MAIL_DATA_PATH}" >> mail.env
 echo "\nNEXTCLOUD_DB_BACKUP=${NEXTCLOUD_DATA_PATH}/nextcloud_db_backup.sql" >> nextcloud.env
 echo "\nNEXTCLOUD_DATA_PATH=${NEXTCLOUD_DATA_PATH}" >> nextcloud.env
 echo "\nNEXTCLOUD_BACKUP_PATH=${NEXTCLOUD_BACKUP_PATH}" >> nextcloud.env
-echo "\nPAPERLESS_CONSUMPTION_DIR=${PAPERLESS_CONSUPTION_PATH}" >> paperless.env
+echo "\nPAPERLESS_CONSUMPTION_DIR=${PAPERLESS_CONSUMPTION_PATH}" >> paperless.env
 echo "\nPAPERLESS_EXPORT_DIR=${PAPERLESS_EXPORT_PATH}" >> paperless.env
+echo "\nPAPERLESS_CONSUMPTION_DIR=${PAPERLESS_CONSUMPTION_PATH}" >> sftp.env
 
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"

@@ -138,17 +138,34 @@ services:
       - ${NEXTCLOUD_DATA_VOLUME_PATH}:${NEXTCLOUD_DATA_PATH}
       - ${NEXTCLOUD_BACKUP_VOLUME_PATH}:${NEXTCLOUD_BACKUP_PATH}
 
+  sftp:
+    build:
+      context: ./images/rpi-sftp/
+    image: bingen/rpi-sftp
+    ports:
+      - "1022:22"
+    volumes:
+      - ${PAPERLESS_CONSUMPTION_VOLUME_PATH}:${PAPERLESS_CONSUMPTION_PATH}
+    secrets:
+      - source: paperless_ftp_pwd
+        target: ftp_pwd
+        uid: '999'
+        mode: 0440
+    env_file:
+      - sftp.env
+
   paperless:
     build:
       context: ./images/rpi-paperless/
     image: bingen/rpi-paperless
+    depends_on:
+      - sftp
     ports:
       - "8081:8000"
-      - "1022:22"
     volumes:
+      - ${PAPERLESS_CONSUMPTION_VOLUME_PATH}:${PAPERLESS_CONSUMPTION_PATH}
       - ${PAPERLESS_DATA_VOLUME_PATH}:/usr/src/paperless/data
       - ${PAPERLESS_MEDIA_VOLUME_PATH}:/usr/src/paperless/media
-      - ${PAPERLESS_CONSUMPTION_VOLUME_PATH}:${PAPERLESS_CONSUMPTION_PATH}
       - ${PAPERLESS_EXPORT_VOLUME_PATH}:${PAPERLESS_EXPORT_PATH}
     secrets:
       - source: paperless_webserver_pwd
@@ -157,10 +174,6 @@ services:
         mode: 0440
       - source: paperless_passphrase
         target: passphrase
-        uid: '999'
-        mode: 0440
-      - source: paperless_ftp_pwd
-        target: ftp_pwd
         uid: '999'
         mode: 0440
     env_file:
