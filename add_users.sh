@@ -9,7 +9,7 @@ fi
 
 # ##### Add users to LDAP ###### #
 
-host=$(docker stack ps ${STACK_NAME} | grep Running | grep openldap | awk '{ print $4 }')
+host=$(docker stack ps ${STACK_NAME} | grep -v Shutdown | grep Running | grep openldap | awk '{ print $4 }')
 #echo Host=$host
 if [ -z $host ]; then
     echo "No host found!";

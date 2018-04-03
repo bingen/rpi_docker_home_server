@@ -55,8 +55,8 @@ while [ $NC_UP -eq 0 ]; do
         echo "Qué me estás container?!";
         continue;
     fi
-    NC_IP=$(ssh $host "docker exec ${container} sh -c 'ifconfig eth1' | grep 'inet ' | cut -d':' -f 2 | cut -d' ' -f 1")
-    curl http://${NC_IP}/index.nginx-debian.html 2>/dev/null | grep title | grep Welcome 1>/dev/null;
+    #NC_IP=$(ssh $host "docker exec ${container} sh -c 'ifconfig eth1' | grep 'inet ' | cut -d':' -f 2 | cut -d' ' -f 1")
+    curl http://${host}/index.nginx-debian.html 2>/dev/null | grep title | grep Welcome 1>/dev/null;
     NC_UP=$((1 - $?));
 done;
 
