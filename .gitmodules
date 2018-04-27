@@ -25,3 +25,6 @@
 [submodule "images/rpi-sftp"]
 	path = images/rpi-sftp
 	url = git@github.com:bingen/rpi-sftp.git
+[submodule "images/rpi-gogs"]
+	path = images/rpi-gogs
+	url = git@github.com:bingen/rpi-gogs.git

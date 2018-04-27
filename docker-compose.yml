@@ -17,6 +17,10 @@ services:
         target: nextcloud_pwd
         uid: '999'
         mode: 0440
+      - source: ldap_gogs_pwd
+        target: gogs_pwd
+        uid: '999'
+        mode: 0440
     # container_name: openldap
     tty: true
     stdin_open: true
@@ -60,6 +64,7 @@ services:
     depends_on:
       # For DNS resolution
       - nextcloud
+      - gogs
     env_file:
       - haproxy.env
     networks:
@@ -179,7 +184,32 @@ services:
     env_file:
       - paperless.env
 
-  #gogs:
+  gogs:
+    build:
+      context: ./images/rpi-gogs/
+    image: bingen/rpi-gogs
+    depends_on:
+      - db
+    env_file:
+      - gogs.env
+    ports:
+      - "2080:2080"
+      - "2443:2443"
+      - "2022:22"
+    volumes:
+      - ${GOGS_DATA_VOLUME_PATH}:/data
+    secrets:
+      - source: db_pwd
+        target: mysql_pwd
+        mode: 0440
+      - source: ldap_gogs_pwd
+        target: ldap_pwd
+        uid: '999'
+        mode: 0440
+      - source: gogs_admin_pwd
+        target: admin_pwd
+        uid: '999'
+        mode: 0440
 
   #wordpress:
 
@@ -195,11 +225,15 @@ secrets:
     external: true
   ldap_nextcloud_pwd:
     external: true
+  ldap_gogs_pwd:
+    external: true
   nextcloud_admin_pwd:
     external: true
   nextcloud_salt:
     external: true
   nextcloud_secret:
+    external: true
+  gogs_admin_pwd:
     external: true
   paperless_webserver_pwd:
     external: true

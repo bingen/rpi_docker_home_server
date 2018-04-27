@@ -5,6 +5,7 @@ PWD_GEN='< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;'
 #PWD_GEN='openssl rand -base64 20'
 DEFAULT_LDAP_MAIL_UID='mail'
 DEFAULT_LDAP_NEXTCLOUD_UID='nextcloud'
+DEFAULT_LDAP_GOGS_UID='gogs'
 
 read -p "Main domain: " domain
 while [[ ! $domain =~ ^.*\.[a-z]{2,}$ ]]; do
@@ -49,14 +50,29 @@ if [[ ${#ldap_nextcloud_pwd} -eq 0 ]]; then
     ldap_nextcloud_pwd=`eval "$PWD_GEN"`
 fi
 
+read -p "LDAP Gogs Bind DN uid ($DEFAULT_LDAP_GOGS_UID): " ldap_gogs_uid
+if [[ ${#ldap_gogs_uid} -eq 0 ]]; then
+    ldap_gogs_uid=$DEFAULT_LDAP_GOGS_UID
+fi
+
+read -p "LDAP Gogs Bind DN Pwd (a random one will be generated if empty): " ldap_gogs_pwd
+if [[ ${#ldap_gogs_pwd} -eq 0 ]]; then
+    ldap_gogs_pwd=`eval "$PWD_GEN"`
+fi
+
 read -p "Nextcloud Admin User Pwd (a random one will be generated if empty): " nextcloud_admin_pwd
 if [[ ${#nextcloud_admin_pwd} -eq 0 ]]; then
     nextcloud_admin_pwd=`eval "$PWD_GEN"`
 fi
 
-read -p "E-mail for Let's Encrypt account (admin@${domain}): " letsencrypt_email
-if [[ ${#letsencrypt_email} -eq 0 ]]; then
-    letsencrypt_email=admin@${domain}
+read -p "Gogs Admin User Pwd (a random one will be generated if empty): " gogs_admin_pwd
+if [[ ${#gogs_admin_pwd} -eq 0 ]]; then
+    gogs_admin_pwd=`eval "$PWD_GEN"`
+fi
+
+read -p "Admin E-mail, used for Let's Encrypt account and more (admin@${domain}): " admin_email
+if [[ ${#admin_email} -eq 0 ]]; then
+    admin_email=admin@${domain}
 fi
 
 echo "If you have a password salt and a secret from a previous installation, provide them here."
@@ -99,7 +115,8 @@ echo Your domain is:                       $domain
 echo Your Volumes path is:                 $volumes
 echo Your LDAP Mail Bind DN Uid is:        $ldap_mail_uid
 echo Your LDAP Nextcloud Bind DN Uid is:   $ldap_nextcloud_uid
-echo Your Let\'s Encrypt account e-mail:   $letsencrypt_email
+echo Your LDAP Gogs Bind DN Uid is:        $ldap_gogs_uid
+echo Your Admin email. Let\'s Encrypt...:  $admin_email
 echo Your Paperless Web Server User:       $paperless_webserver_user
 echo Your SFTP User:                       $paperless_ftp_user
 
@@ -118,9 +135,11 @@ echo $db_pwd | docker secret create db_pwd -
 echo $ldap_pwd | docker secret create ldap_pwd -
 echo $ldap_mail_pwd | docker secret create ldap_mail_pwd -
 echo $ldap_nextcloud_pwd | docker secret create ldap_nextcloud_pwd -
+echo $ldap_gogs_pwd | docker secret create ldap_gogs_pwd -
 echo $nextcloud_admin_pwd | docker secret create nextcloud_admin_pwd -
 echo $nextcloud_salt | docker secret create nextcloud_salt -
 echo $nextcloud_secret | docker secret create nextcloud_secret -
+echo $gogs_admin_pwd | docker secret create gogs_admin_pwd -
 echo $paperless_webserver_pwd | docker secret create paperless_webserver_pwd -
 echo $paperless_passphrase | docker secret create paperless_passphrase -
 echo $paperless_ftp_pwd | docker secret create paperless_ftp_pwd -
@@ -138,15 +157,17 @@ cp nextcloud.env.template nextcloud.env
 cp haproxy.env.template haproxy.env
 cp paperless.env.template paperless.env
 cp sftp.env.template sftp.env
+cp gogs.env.template gogs.env
 
 for i in `ls *.env .env`; do
     sed -i "s/\${DOMAIN}/${domain}/g" $i
     sed -i "s/\${ORGANIZATION}/${org}/g" $i
     sed -i "s/\${EXTENSION}/${ext}/g" $i
     sed -i "s/\${VOLUMES_PATH}/${volumes//\//\\/}/g" $i
-    sed -i "s/\${MAIL_LDAP_UID}/${ldap_mail_uid}/g" $i
-    sed -i "s/\${NEXTCLOUD_LDAP_UID}/${ldap_nextcloud_uid}/g" $i
-    sed -i "s/\${LETSENCRYPT_EMAIL}/${letsencrypt_email}/g" $i
+    sed -i "s/\${LDAP_MAIL_UID}/${ldap_mail_uid}/g" $i
+    sed -i "s/\${LDAP_NEXTCLOUD_UID}/${ldap_nextcloud_uid}/g" $i
+    sed -i "s/\${LDAP_GOGS_UID}/${ldap_gogs_uid}/g" $i
+    sed -i "s/\${ADMIN_EMAIL}/${admin_email}/g" $i
     sed -i "s/\${PAPERLESS_WEBSERVER_USER}/${paperless_webserver_user}/g" $i
     sed -i "s/\${PAPERLESS_FTP_USER}/${paperless_ftp_user}/g" $i
     #sed -i "s/\${}/${}/g" $i
@@ -189,5 +210,5 @@ sudo mkdir -p ${PAPERLESS_MEDIA_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_CONSUMPTION_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_EXPORT_VOLUME_PATH}
 
-echo "Copying gemail confs"
+echo "Copying getmail confs"
 cp images/rpi-email/getmail/getmailrc-* ${MAIL_DATA_VOLUME_PATH}/getmail/
