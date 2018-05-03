@@ -209,6 +209,8 @@ sudo mkdir -p ${PAPERLESS_DATA_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_MEDIA_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_CONSUMPTION_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_EXPORT_VOLUME_PATH}
+# let's Encrypt
+sudo mkdir -p ${LETSENCRYPT_VOLUME_PATH}
 
 echo "Copying getmail confs"
 cp images/rpi-email/getmail/getmailrc-* ${MAIL_DATA_VOLUME_PATH}/getmail/

@@ -72,6 +72,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - ${LETSENCRYPT_VOLUME_PATH}:/etc/letsencrypt
   mail:
     build:
       context: ./images/rpi-email/
