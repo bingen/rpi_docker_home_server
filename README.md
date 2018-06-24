@@ -3,7 +3,7 @@
 Flash Hypriot
 -------------
 
-You can check last images [here](http://blog.hypriot.com/downloads/) and use [flash tool](https://github.com/hypriot/flash) to flash your RespberryPi SD:
+You can check last images [here](http://blog.hypriot.com/downloads/) and use [flash tool](https://github.com/hypriot/flash) to flash your RaspberryPi SD:
 
     flash --hostname your-hostname https://github.com/hypriot/image-builder-rpi/releases/download/v1.4.0/hypriotos-rpi-v1.4.0.img.zip
 
@@ -19,7 +19,7 @@ Change default password:
 
     passwd
 
-You can also set up paswwordless access with:
+You can also set up paswordless access with:
 
     ssh-copy-id -i ~/.ssh/your-key_rsa.pub pirate@your-rpi -o "IdentitiesOnly yes"
 
@@ -120,6 +120,13 @@ When the dockers are running, some service users (e.g. `dovecot` or `mysqld`) ca
     sudo usermod -u 205 avahi
     sudo service dbus restart
     sudo service avahi restart
+
+Install missing `libnss-mdns` package (see explanation [here](https://paulnebel.io/api/containers/lean/node/raspberry_pi/swarm/2016/08/23/hypriotos-swarm-raspberry-pi-cluster/)):
+
+    sudo aptitude install libnss-mdns
+
+Also make sure `avahi-daemon` works, and otherwise restart it. See [this issue](https://github.com/hypriot/image-builder-rpi/issues/170).
+
 
 
 Swarm
@@ -244,7 +251,7 @@ And the run:
 
     ldapadd -W -D "cn=admin,dc=your-domain,dc=com" -f user_pwd.ldif
 
-You generate the password with:
+You can generate the password with:
 
     slappasswd -s your-password
 
@@ -270,6 +277,14 @@ Let's Encrypt
 Run the following script to enable Let's Encrypt for Nextcloud:
 
     ./letsencrypt.sh <your-stack-name>
+
+Own registry
+------------
+
+Follow the instructions [here](https://docs.docker.com/engine/swarm/stack-deploy/#set-up-a-docker-registry) to set up your own registry:
+
+    docker service create --name registry --publish published=5000,target=5000 registry:2
+
 
 Dynamic DNS
 -----------
@@ -300,13 +315,11 @@ TODO
 ----
 
 - Install and enable Nextcloud apps automatically
-- Let's Encrypt
 - DNS
 - XMPP
 - Wordpress
-- Gitlab
 - VPN
-- Opens social networks (GNU social, Diaspora)
+- Open social networks (GNU social, Diaspora)
 - Transmission
 - Sia storage
 - Use PHP7 for Nextcloud
