@@ -4,6 +4,10 @@ services:
     build:
       context: ./images/rpi-openldap/
     image: bingen/rpi-openldap:latest
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
     secrets:
       - source: ldap_pwd
         target: admin_pwd
@@ -110,6 +114,10 @@ services:
         - NEXTCLOUD_DATA_PATH=${NEXTCLOUD_DATA_PATH}
         - NEXTCLOUD_BACKUP_PATH=${NEXTCLOUD_BACKUP_PATH}
     image: bingen/rpi-nextcloud:latest
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
     depends_on:
       - db
       - openldap
@@ -192,6 +200,7 @@ services:
     image: bingen/rpi-gogs
     depends_on:
       - db
+      - openldap
     env_file:
       - gogs.env
     ports:
