@@ -169,31 +169,6 @@ services:
     env_file:
       - sftp.env
 
-  paperless:
-    build:
-      context: ./images/rpi-paperless/
-    image: bingen/rpi-paperless
-    depends_on:
-      - sftp
-    ports:
-      - "8081:8000"
-    volumes:
-      - ${PAPERLESS_CONSUMPTION_VOLUME_PATH}:${PAPERLESS_CONSUMPTION_PATH}
-      - ${PAPERLESS_DATA_VOLUME_PATH}:/usr/src/paperless/data
-      - ${PAPERLESS_MEDIA_VOLUME_PATH}:/usr/src/paperless/media
-      - ${PAPERLESS_EXPORT_VOLUME_PATH}:${PAPERLESS_EXPORT_PATH}
-    secrets:
-      - source: paperless_webserver_pwd
-        target: webserver_pwd
-        uid: '999'
-        mode: 0440
-      - source: paperless_passphrase
-        target: passphrase
-        uid: '999'
-        mode: 0440
-    env_file:
-      - paperless.env
-
   gogs:
     build:
       context: ./images/rpi-gogs/
