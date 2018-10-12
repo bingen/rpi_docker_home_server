@@ -171,7 +171,6 @@ First download the repos:
 
     git clone https://github.com/bingen/rpi_docker_home_server.git
     cd rpi_docker_home_server
-    git submodule update --init --recursive
 
 Set up your preferences:
 
