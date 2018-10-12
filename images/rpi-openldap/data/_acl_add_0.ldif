@@ -1,0 +1,9 @@
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcAccess
+olcAccess: {0}to dn.subtree="dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}" attrs=userPassword
+    by self write
+    by dn.base="cn=admin,dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}" write
+    by dn.children="ou=services,dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}" read
+    by anonymous auth
+    by * none

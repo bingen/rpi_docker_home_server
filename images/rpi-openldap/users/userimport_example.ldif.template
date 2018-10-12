@@ -1,0 +1,21 @@
+# Some User
+# ldapadd -W -D "cn=admin,dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}" -f userimport_example.ldif
+dn: uniqueIdentifier=example,ou=people,dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+objectClass: PostfixBookMailAccount
+objectClass: extensibleObject
+cn: Example Lastname
+givenName: Example
+mail: example@${LDAP_DOMAIN}
+mailEnabled: TRUE
+mailGidNumber: 5000
+mailHomeDirectory: ${MAIL_DATA_PATH}/example@${LDAP_DOMAIN}
+mailQuota: 10240000
+mailStorageDirectory: maildir:${MAIL_DATA_PATH}/example@${LDAP_DOMAIN}/Maildir
+mailUidNumber: 5000
+sn: Lastname
+uniqueIdentifier: example
+userPassword: aaa
+

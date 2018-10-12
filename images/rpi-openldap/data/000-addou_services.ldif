@@ -1,0 +1,4 @@
+dn: ou=services,dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}
+objectClass: organizationalUnit
+objectClass: top
+ou: services

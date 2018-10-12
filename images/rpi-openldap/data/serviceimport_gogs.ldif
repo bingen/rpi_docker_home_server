@@ -1,0 +1,8 @@
+# gogs
+dn: uid=${LDAP_GOGS_UID},ou=services,dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}
+objectClass: simpleSecurityObject
+objectClass: account
+objectClass: top
+uid: ${LDAP_GOGS_UID}
+userPassword: ${LDAP_GOGS_PWD}
+

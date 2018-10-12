@@ -1,0 +1,4 @@
+dn: cn=admin,dc=${LDAP_ORGANIZATION},dc=${LDAP_EXTENSION}
+changetype: modify
+add: objectClass
+objectClass: extensibleObject

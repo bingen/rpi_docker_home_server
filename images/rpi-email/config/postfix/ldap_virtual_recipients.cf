@@ -1,0 +1,8 @@
+bind = yes
+bind_dn = ${LDAP_BIND_DN}
+bind_pw = ${LDAP_BIND_PWD}
+server_host = ${LDAP_SERVER_HOST}
+search_base = ${LDAP_SEARCH_BASE}
+domain = ${DOMAIN}
+query_filter = (&(mail=%s)(mailEnabled=TRUE))
+result_attribute = mail

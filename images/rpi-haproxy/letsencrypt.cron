@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# https://community.letsencrypt.org/t/renew-incorrect-validation-certificate-for-tls-sni-01-challenge/64865/2
+#certbot renew --tls-sni-01-port=8888
+certbot renew --preferred-challenges http
+
+for _URL in `ls /etc/letsencrypt/live`; do
+    cat /etc/letsencrypt/live/${_URL}/fullchain.pem \
+        /etc/letsencrypt/live/${_URL}/privkey.pem \
+        > /etc/letsencrypt/haproxy/${_URL}.pem;
+done;

@@ -1,0 +1,21 @@
+[options]
+message_log = /var/log/getmail.log
+delete = 0
+# delete_after = 10 # days
+no_delivered_to = 1                             # Don't add a Delivered-To: header for this mailbox
+no_received = 1                                 # Don't add a Received: header for this mailbox
+verbose = 1
+read_all = False
+
+[retriever]
+type = SimplePOP3SSLRetriever
+server = pop.gmail.com
+username = your-username@gmail.com
+password = your-password
+# delete_after = 10 # days
+
+[destination]
+type = MDA_external
+path = /usr/sbin/sendmail
+arguments = ("-i", "-bm", "your-user@your-domain.com")
+unixfrom = true
