@@ -1,19 +1,19 @@
-server { 
-    listen 80; 
+server {
+    listen 80;
     server_name localhost;
     root /var/www/html;
     location ~ ^/.well-known/acme-challenge/(.*)$ {
         allow all;
     }
-    #rewrite ^ https://$server_name$request_uri? permanent; # enforce https 
+    #rewrite ^ https://$server_name$request_uri? permanent; # enforce https
 }
 
 server {
-    listen 443 ssl; 
+    listen 443 ssl;
     server_name localhost;
 
-    ssl_certificate /etc/nginx/ssl/nextcloud.crt; 
-    ssl_certificate_key /etc/nginx/ssl/nextcloud.key; 
+    ssl_certificate /etc/nginx/ssl/nextcloud.crt;
+    ssl_certificate_key /etc/nginx/ssl/nextcloud.key;
 
     root /var/www/nextcloud;
     index index.php;
@@ -78,4 +78,3 @@ server {
         deny all;
     }
 }
-
