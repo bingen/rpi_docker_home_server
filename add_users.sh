@@ -29,7 +29,8 @@ find images/rpi-openldap/users -type f -exec \
      sed -i "s/\${MAIL_DATA_PATH}/${MAIL_DATA_PATH//\//\\/}/g" {} \;
 
 echo Copying user files to Host $host
-scp -r images/rpi-openldap/users $host:/tmp/
+ssh $host "mkdir -p /tmp/users"
+scp -r images/rpi-openldap/users/userimport*.ldif $host:/tmp/users/
 
 echo Copying user files to Container $container in Host $host
 ssh $host "docker cp /tmp/users $container:/tmp/"
