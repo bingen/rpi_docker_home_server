@@ -1,13 +1,18 @@
 FROM bingen/rpi-nginx
 
-# update and install php5
+# Add PHP 7.2 repo
 RUN apt-get update && \
-    apt-get install -y php7.0 php7.0-fpm php-pear php7.0-common php7.0-mcrypt \
-    php7.0-mysql php7.0-cli php7.0-gd php7.0-curl php7.0-apcu php7.0-opcache \
-    php7.0-mbstring php7.0-ldap php7.0-zip && \
+    apt-get install apt-transport-https lsb-release ca-certificates wget && \
+    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+    sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+# update and install php
+RUN apt-get update && \
+    apt-get install -y php7.2 php7.2-fpm php-pear php7.2-common \
+    php7.2-mysql php7.2-cli php7.2-gd php7.2-curl php-apcu php7.2-opcache \
+    php7.2-mbstring php7.2-ldap php7.2-zip && \
     apt-get clean
 
 # overwrite the default-configuration with our own settings - enabling PHP
 COPY default /etc/nginx/sites-available/default
 
-CMD service php7.0-fpm start && nginx
+CMD service php7.2-fpm start && nginx
