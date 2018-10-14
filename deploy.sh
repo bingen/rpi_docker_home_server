@@ -36,6 +36,9 @@ sleep 60
 
 ./add_users.sh ${STACK_NAME}
 
+# Add local domains
+./add_dns_entries.sh ${STACK_NAME}
+
 # Wait for Nextcloud
 NC_UP=0
 while [ $NC_UP -eq 0 ]; do

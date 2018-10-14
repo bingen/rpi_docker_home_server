@@ -314,12 +314,10 @@ TODO
 ----
 
 - Install and enable Nextcloud apps automatically
-- DNS
 - XMPP
 - Wordpress
 - VPN
 - Open social networks (GNU social, Diaspora)
 - Transmission
 - Sia storage
-- Use PHP7 for Nextcloud
 - Alternative: run your own registry for images.

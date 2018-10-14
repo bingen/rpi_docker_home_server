@@ -197,6 +197,27 @@ services:
         uid: '999'
         mode: 0440
 
+  pihole:
+    image: pihole/pihole:v4.0_armhf
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    env_file:
+      - pihole.env
+    # cap_add: # for DHCP
+      # - NET_ADMIN
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      # - "67:67/udp" # for DHCP
+      - "8314:80"
+      - "3443:443"
+    volumes:
+      - ${PIHOLE_CONFIG_VOLUME_PATH}:/etc/pihole/
+      - ${PIHOLE_DNSMASQ_VOLUME_PATH}:/etc/dnsmasq.d/
+    restart: always
+
   #wordpress:
 
   #transmission:

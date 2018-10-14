@@ -70,6 +70,11 @@ if [[ ${#gogs_admin_pwd} -eq 0 ]]; then
     gogs_admin_pwd=`eval "$PWD_GEN"`
 fi
 
+read -p "Pi-Hole Web User Pwd (a random one will be generated if empty): " pihole_web_pwd
+if [[ ${#pihole_web_pwd} -eq 0 ]]; then
+    pihole_web_pwd=`eval "$PWD_GEN"`
+fi
+
 read -p "Admin E-mail, used for Let's Encrypt account and more (admin@${domain}): " admin_email
 if [[ ${#admin_email} -eq 0 ]]; then
     admin_email=admin@${domain}
@@ -139,10 +144,12 @@ echo $ldap_gogs_pwd | docker secret create ldap_gogs_pwd -
 echo $nextcloud_admin_pwd | docker secret create nextcloud_admin_pwd -
 echo $nextcloud_salt | docker secret create nextcloud_salt -
 echo $nextcloud_secret | docker secret create nextcloud_secret -
-echo $gogs_admin_pwd | docker secret create gogs_admin_pwd -
 echo $paperless_webserver_pwd | docker secret create paperless_webserver_pwd -
 echo $paperless_passphrase | docker secret create paperless_passphrase -
 echo $paperless_ftp_pwd | docker secret create paperless_ftp_pwd -
+echo $gogs_admin_pwd | docker secret create gogs_admin_pwd -
+#echo $pihole_web_pwd | docker secret create pihole_web_pwd -
+sed -i "s/\${PIHOLE_WEB_PWD}/${pihole_web_pwd}/g" pihole.env
 
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"
@@ -158,6 +165,11 @@ cp haproxy.env.template haproxy.env
 cp paperless.env.template paperless.env
 cp sftp.env.template sftp.env
 cp gogs.env.template gogs.env
+cp pihole.env.template pihole.env
+
+# IP for Pi-Hole
+IP_LOOKUP="$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')"  # May not work for VPN / tun0
+IPv6_LOOKUP="$(ip -6 route get 2001:4860:4860::8888 | awk '{for(i=1;i<=NF;i++) if ($i=="src") print $(i+1)}')"  # May not work for VPN / tun0
 
 for i in `ls *.env .env`; do
     sed -i "s/\${DOMAIN}/${domain}/g" $i
@@ -170,6 +182,8 @@ for i in `ls *.env .env`; do
     sed -i "s/\${ADMIN_EMAIL}/${admin_email}/g" $i
     sed -i "s/\${PAPERLESS_WEBSERVER_USER}/${paperless_webserver_user}/g" $i
     sed -i "s/\${PAPERLESS_FTP_USER}/${paperless_ftp_user}/g" $i
+    sed -i "s/\${IP_LOOKUP}/${IP_LOOKUP}/g" $i
+    sed -i "s/\${IPv6_LOOKUP}/${IPv6_LOOKUP}/g" $i
     #sed -i "s/\${}/${}/g" $i
 done;
 
@@ -209,6 +223,11 @@ sudo mkdir -p ${PAPERLESS_DATA_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_MEDIA_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_CONSUMPTION_VOLUME_PATH}
 sudo mkdir -p ${PAPERLESS_EXPORT_VOLUME_PATH}
+# gogs
+sudo mkdir -p ${GOGS_DATA_VOLUME_PATH}
+# Pi-Hole
+sudo mkdir -p ${PIHOLE_CONFIG_VOLUME_PATH}
+sudo mkdir -p ${PIHOLE_DNSMASQ_VOLUME_PATH}
 # let's Encrypt
 sudo mkdir -p ${LETSENCRYPT_VOLUME_PATH}
 
