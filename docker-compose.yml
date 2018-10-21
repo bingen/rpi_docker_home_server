@@ -69,6 +69,7 @@ services:
       # For DNS resolution
       - nextcloud
       - gogs
+      - pihole
     env_file:
       - haproxy.env
     networks:
