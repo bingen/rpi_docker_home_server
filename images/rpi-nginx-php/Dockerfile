@@ -2,7 +2,7 @@ FROM bingen/rpi-nginx
 
 # Add PHP 7.2 repo
 RUN apt-get update && \
-    apt-get install apt-transport-https lsb-release ca-certificates wget && \
+    apt-get install -y apt-transport-https lsb-release ca-certificates wget && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
 # update and install php
