@@ -17,6 +17,12 @@ if [ -z $host ]; then
     echo "No host found!";
     exit 1;
 fi
+# add avahi suffix
+localhostname=$(cat /etc/hostname)
+if [ "${localhostname}" != "${host}" ]; then
+    host=${host}.local
+fi
+
 container=$(ssh $host 'docker ps | grep '${SERVICE}' | cut -f1 -d" "')
 #echo Container=$container
 if [ -z $container ]; then

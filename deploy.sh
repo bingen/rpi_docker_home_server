@@ -52,6 +52,12 @@ while [ $NC_UP -eq 0 ]; do
         echo "No host found!";
         continue;
     fi
+    # add avahi suffix
+    localhostname=$(cat /etc/hostname)
+    if [ "${localhostname}" != "${host}" ]; then
+        host=${host}.local
+    fi
+
     container=$(ssh $host 'docker ps | grep '${SERVICE}' | cut -f1 -d" "')
     #echo Container=$container
     if [ -z $container ]; then

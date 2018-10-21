@@ -57,7 +57,7 @@ echo "Checking workers mounted volumes"
 echo `docker node ls --filter role=worker --format "{{.Hostname}} {{.Status}} {{.Availability}}" | grep "Ready Active" | cut -f 1 -d ' '`
 for node in `docker node ls --filter role=worker --format "{{.Hostname}} {{.Status}} {{.Availability}}" | grep "Ready Active"  | cut -f 1 -d ' '`; do
     echo "Checking volumes on $node"
-    ssh $node "mount | grep volumes || mount /media/volumes"
+    ssh ${node}.local "mount | grep volumes || mount /media/volumes"
 done
 
 # restart stack
@@ -69,7 +69,7 @@ sleep 120
 # add users
 # in case it's not ready yet, try 5 times
 for i in $(seq 1 5); do
-    echo "Attempt 1";
+    echo "Adding users - Attempt $i";
     ./add_users.sh ${STACK_NAME};
     if [ $? -eq 0 ]; then
         break;
