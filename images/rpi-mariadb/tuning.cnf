@@ -1,0 +1,8 @@
+[mysqld]
+
+#join_buffer_size = 128.0K
+
+#innodb_buffer_pool_size = 1.0G
+innodb_buffer_pool_size = 384M
+innodb_log_file_size = 16M
+innodb_buffer_pool_instances = 1

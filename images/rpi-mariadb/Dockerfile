@@ -23,6 +23,13 @@ RUN \
   mysql -e "SELECT Host, User, Password FROM mysql.user;" > /tmp/a.out
   #rm -f /tmp/config
 
+COPY tuning.cnf /etc/mysql/conf.d/tuning.cnf
+
+COPY tuning-primer.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/tuning-primer.sh
+COPY mysqltuner.pl /usr/local/bin/
+RUN chmod +x /usr/local/bin/mysqltuner.pl
+
 COPY startup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/startup.sh
 
