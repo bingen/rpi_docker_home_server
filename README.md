@@ -60,11 +60,11 @@ If you want, you can also add this config snippet to all your nodes and add your
     sudo chmod 0400 /root/volumes_luks_pwd
     sudo cryptsetup luksAddKey /dev/sdX1 /root/volumes_luks_pwd
 
-Add to /etc/crypttab:
+Add to `/etc/crypttab`:
 
     volumes      /dev/disk/by-uuid/uuid-of-your-drive  /root/volumes_luks_pwd  luks
 
-and add to /etc/fstab:
+and add to `/etc/fstab`:
 
     /dev/mapper/volumes  /media/volumes     ext4    defaults        0       2
 
@@ -77,11 +77,11 @@ Install server on main host:
     sudo mkdir -p /export/volumes
     sudo mount --bind /media/volumes /export/volumes
 
-And add the following line to /etc/fstab toavoid repeating it on startup:
+And add the following line to `/etc/fstab` to avoid repeating it on startup:
 
     /media/volumes       /export/volumes    none    bind            0       0
 
-And to /etc/exports:
+And to `/etc/exports`:
 
     /export         192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
     /export/volumes 192.168.1.0/24(rw,nohide,insecure,no_subtree_check,async,no_root_squash)
@@ -92,7 +92,7 @@ On the other nodes:
 
     sudo aptitude install nfs-common
 
-And add to fstab:
+And add to `/etc/fstab`:
 
     your-main-host:/export/volumes /media/volumes nfs auto,user 0 0
 
@@ -117,9 +117,10 @@ Avahi
 
 When the dockers are running, some service users (e.g. `dovecot` or `mysqld`) can have conflicting ids with the one of avahi, making it fail. To avoid that, we can just increase its `uid`, e.g.:
 
+    sudo systemctl stop avahi-daemon
     sudo usermod -u 205 avahi
-    sudo service dbus restart
-    sudo service avahi restart
+    sudo systemctl restart dbus
+    sudo systemctl start avahi-daemon
 
 Install missing `libnss-mdns` package (see explanation [here](https://paulnebel.io/api/containers/lean/node/raspberry_pi/swarm/2016/08/23/hypriotos-swarm-raspberry-pi-cluster/)):
 
