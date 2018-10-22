@@ -48,25 +48,25 @@ RUN cd $HOME \
 
 # Install Gogs
 RUN . /etc/profile.d/gogs.sh \
-    && ${GOROOT}/bin/go get -u -tags "cert" github.com/gogits/gogs \
-    && cd $GOPATH/src/github.com/gogits/gogs \
+    && ${GOROOT}/bin/go get -u -tags "cert" github.com/gogs/gogs \
+    && cd $GOPATH/src/github.com/gogs/gogs \
     && go build -tags "cert"
 
 # TODO:
 # clean stuff
-# https://github.com/gogits/gogs/blob/master/docker/finalize.sh
+# https://github.com/gogs/gogs/blob/master/docker/finalize.sh
 
 # Clean stuff
-RUN rm -r $HOME/go/src/github.com/gogits/gogs/.git
+RUN rm -r $HOME/go/src/github.com/gogs/gogs/.git
 #RUN rm -r $HOME/local
 
 # Configuration
 # $HOME doesn't work with COPY
-RUN mkdir -p ${GIT_HOME}/go/src/github.com/gogits/gogs/custom/conf
-COPY app.ini ${GIT_HOME}/go/src/github.com/gogits/gogs/custom/conf/
+RUN mkdir -p ${GIT_HOME}/go/src/github.com/gogs/gogs/custom/conf
+COPY app.ini ${GIT_HOME}/go/src/github.com/gogs/gogs/custom/conf/
 # LDAP
-RUN mkdir -p ${GIT_HOME}/go/src/github.com/gogits/gogs/custom/conf/auth.d
-COPY ldap.conf ${GIT_HOME}/go/src/github.com/gogits/gogs/custom/conf/auth.d/
+RUN mkdir -p ${GIT_HOME}/go/src/github.com/gogs/gogs/custom/conf/auth.d
+COPY ldap.conf ${GIT_HOME}/go/src/github.com/gogs/gogs/custom/conf/auth.d/
 
 # ############## USER root ########################
 
@@ -76,6 +76,6 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
 
 #ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-#CMD gosu git ${GOPATH}/src/github.com/gogits/gogs/gogs web
+#CMD gosu git ${GOPATH}/src/github.com/gogs/gogs/gogs web
 ENTRYPOINT []
 CMD ["/usr/local/bin/docker-entrypoint.sh"]
