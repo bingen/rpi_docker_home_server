@@ -190,13 +190,17 @@ done;
 # read variables
 . .env
 # repeated env variables
-echo "\nMAIL_DATA_PATH=${MAIL_DATA_PATH}" >> mail.env
-echo "\nNEXTCLOUD_DB_BACKUP=${NEXTCLOUD_DATA_PATH}/nextcloud_db_backup.sql" >> nextcloud.env
-echo "\nNEXTCLOUD_DATA_PATH=${NEXTCLOUD_DATA_PATH}" >> nextcloud.env
-echo "\nNEXTCLOUD_BACKUP_PATH=${NEXTCLOUD_BACKUP_PATH}" >> nextcloud.env
-echo "\nPAPERLESS_CONSUMPTION_DIR=${PAPERLESS_CONSUMPTION_PATH}" >> paperless.env
-echo "\nPAPERLESS_EXPORT_DIR=${PAPERLESS_EXPORT_PATH}" >> paperless.env
-echo "\nPAPERLESS_CONSUMPTION_DIR=${PAPERLESS_CONSUMPTION_PATH}" >> sftp.env
+echo "" >> mail.env
+echo "MAIL_DATA_PATH=${MAIL_DATA_PATH}" >> mail.env
+echo "" >> nextcloud.env
+echo "NEXTCLOUD_DB_BACKUP=${NEXTCLOUD_DATA_PATH}/nextcloud_db_backup.sql" >> nextcloud.env
+echo "NEXTCLOUD_DATA_PATH=${NEXTCLOUD_DATA_PATH}" >> nextcloud.env
+echo "NEXTCLOUD_BACKUP_PATH=${NEXTCLOUD_BACKUP_PATH}" >> nextcloud.env
+echo "" >> paperless.env
+echo "PAPERLESS_CONSUMPTION_DIR=${PAPERLESS_CONSUMPTION_PATH}" >> paperless.env
+echo "PAPERLESS_EXPORT_DIR=${PAPERLESS_EXPORT_PATH}" >> paperless.env
+echo "" >> sftp.env
+echo "PAPERLESS_CONSUMPTION_DIR=${PAPERLESS_CONSUMPTION_PATH}" >> sftp.env
 
 echo $'\E[33m'
 echo "//////////////////////////////////////////////////"
