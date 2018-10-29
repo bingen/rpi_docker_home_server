@@ -1,13 +1,19 @@
 #!/bin/bash
 
 STACK_NAME=$1
+if [ $# -eq 0 ]; then
+    echo "You must pass stack name as a parameter"
+    exit 1
+fi
+
 BUILD=$2
 if [ -z $BUILD ]; then
     BUILD=1;
 fi
-if [ $# -eq 0 ]; then
-    echo "You must pass stack name as a parameter"
-    exit 1
+
+PUSH=$3
+if [ -z $PUSH ]; then
+    PUSH=0;
 fi
 
 # Delete previous running stack
@@ -16,12 +22,13 @@ docker stack rm ${STACK_NAME}
 # Build images
 if [ $BUILD -eq 1 ]; then
     docker-compose build
-    docker push bingen/rpi-openldap
-    docker push bingen/rpi-mariadb
-    docker push bingen/rpi-haproxy
-    docker push bingen/rpi-mailserver
-    docker push bingen/rpi-nextcloud
-    docker push bingen/rpi-zoneminder
+fi
+# Push images
+if [ $PUSH -eq 1 ]; then
+    source .env # for $ARCH
+    for i in `ls images`; do
+        docker push bingen/${ARCH}-${i}
+    done;
 fi
 
 # Deploy Stack
@@ -40,6 +47,7 @@ sleep 60
 ./add_dns_entries.sh ${STACK_NAME}
 
 # Wait for Nextcloud
+echo "Waiting for Nextcloud"
 NC_UP=0
 while [ $NC_UP -eq 0 ]; do
     # TODO: Use docker inspect Go templates

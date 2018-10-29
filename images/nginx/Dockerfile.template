@@ -1,4 +1,4 @@
-FROM resin/raspberrypi3-debian:stretch
+FROM BASE_IMAGE_PLACEHOLDER
 
 #ENV NGINX_VERSION 1.2.1-2.2+wheezy3
 

@@ -7,6 +7,9 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
+echo ""
+echo "Adding DNS entries to PI-HOLE"
+
 CONF_FILE=custom_dnsmasq.conf
 
 IP_LOOKUP="$(ip route get 8.8.8.8 | awk '{ print $NF; exit }')"  # May not work for VPN / tun0

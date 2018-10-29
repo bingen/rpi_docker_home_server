@@ -1,4 +1,4 @@
-FROM resin/raspberrypi3-debian:latest
+FROM BASE_IMAGE_PLACEHOLDER
 
 ENV DEBIAN_FRONTEND=noninteractive
 

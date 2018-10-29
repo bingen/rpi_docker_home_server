@@ -1,7 +1,7 @@
-#!bin/bash
+#!/bin/bash
 
-echo "Installing Mysql DB"
-mysql_install_db --user=mysql --ldata=/var/lib/mysql
+echo "Permissions"
+chown -R mysql:mysql /var/lib/mysql
 
 # set root password from secret
 if [ ! -z $MYSQL_ROOT_PWD_FILE -a -f $MYSQL_ROOT_PWD_FILE ]; then

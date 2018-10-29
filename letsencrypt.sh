@@ -8,6 +8,8 @@ if [ $# -eq 0 ]; then
 fi
 
 # ##### Add Let's Encrypt certificates ###### #
+echo ""
+echo "Adding Let's Encrypt certificates"
 
 # Find Nextcloud container
 SERVICE=nextcloud

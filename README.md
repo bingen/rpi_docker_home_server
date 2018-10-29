@@ -147,8 +147,7 @@ Data and volumes
 
 If you have existing data, create folders (otherwise setup script will do it) and copy it data:
 
-    sudo mkdir -p /media/volumes/mail/data
-    sudo mkdir -p /media/volumes/mail/state
+    sudo mkdir -p /media/volumes/mail/
     sudo mkdir -p /media/volumes/nextcloud
 
     sudo chown -R pirate:pirate /media/volumes/*
@@ -162,7 +161,8 @@ From your current installation:
 
     rsync -auv --delete -e "ssh -i ~/.ssh/your-key_rsa" /var/www/nextcloud/data your-main-host:/media/volumes/nextcloud/
     mysqldump --lock-tables -u nextcloud -p -h localhost nextcloud > /var/www/nextcloud/nextcloud_db_backup.sql
-    rsync -auv --delete -e "ssh -i ~/.ssh/your-key_rsa" /srv/vmail/ your-main-host:/media/volumes/mail/data
+    scp -i ~/.ssh/your-key_rsa /var/www/nextcloud/nextcloud_db_backup.sql your-main-host:/media/volumes/nextcloud/data/
+    rsync -auv --delete -e "ssh -i ~/.ssh/your-key_rsa" /srv/vmail/ your-main-host:/media/volumes/mail
 
 
 Configuration and deployment

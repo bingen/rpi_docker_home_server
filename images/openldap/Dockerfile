@@ -1,14 +1,15 @@
-FROM resin/raspberrypi3-debian:latest
+FROM debian:stretch
 
 # Add openldap user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN groupadd -r openldap && useradd -r -g openldap -u 999 openldap
 
 # Install OpenLDAP, ldap-utils and ssl-tools from baseimage and clean apt-get files
 RUN apt-get -y update \
-    && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes --no-install-recommends \
+    && LC_ALL=C DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
        ldap-utils \
        openssl \
        slapd \
+       procps \
 #       ca-certificates \
 #       curl \
 #       patch \

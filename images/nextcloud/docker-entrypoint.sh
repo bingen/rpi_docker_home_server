@@ -10,7 +10,7 @@ if [ -z "${NEXTCLOUD_SERVER_NAME}" ]; then
     exit 1
 fi
 
-sudo sed -i "s/server_name localhost/server_name ${NEXTCLOUD_SERVER_NAME}.${NEXTCLOUD_DOMAIN} ${NEXTCLOUD_SERVER_NAME}/g" /etc/nginx/sites-available/default
+sed -i "s/server_name localhost/server_name ${NEXTCLOUD_SERVER_NAME}.${NEXTCLOUD_DOMAIN} ${NEXTCLOUD_SERVER_NAME}/g" /etc/nginx/sites-available/default
 
 # set Admin password from secret
 if [ ! -z $NEXTCLOUD_ADMIN_PWD_FILE -a -f $NEXTCLOUD_ADMIN_PWD_FILE ]; then
@@ -67,6 +67,7 @@ function check_result {
 # ### DB ###
 
 # wait for DB to be ready
+sleep 60 # to avoid hitting it while the first start for setting root pwd
 R=111
 while [ $R -eq 111 ]; do
     mysql -u root -p${MYSQL_ROOT_PWD} -h ${DB_HOST} -e "SHOW DATABASES"  2> /dev/null;

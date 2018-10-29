@@ -232,4 +232,4 @@ sudo mkdir -p ${PIHOLE_DNSMASQ_VOLUME_PATH}
 sudo mkdir -p ${LETSENCRYPT_VOLUME_PATH}
 
 echo "Copying getmail confs"
-cp images/rpi-email/getmail/getmailrc-* ${MAIL_DATA_VOLUME_PATH}/getmail/
+cp images/email/getmail/getmailrc-* ${MAIL_DATA_VOLUME_PATH}/getmail/

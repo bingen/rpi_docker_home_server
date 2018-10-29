@@ -1,8 +1,8 @@
-FROM resin/raspberrypi3-debian:latest
+FROM debian:stretch
 
 RUN echo deb http://deb.debian.org/debian jessie-backports main  >> /etc/apt/sources.list
 RUN apt-get update && apt-get install -y haproxy cron \
-    && apt-get install certbot -t jessie-backports
+    && apt-get install -y certbot -t jessie-backports
 
 RUN mkdir -p /run/haproxy
 

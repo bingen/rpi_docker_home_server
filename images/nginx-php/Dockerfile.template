@@ -1,4 +1,4 @@
-FROM bingen/rpi-nginx
+FROM bingen/ARCH_PLACEHOLDER-nginx
 
 # Add PHP 7.2 repo
 RUN apt-get update && \

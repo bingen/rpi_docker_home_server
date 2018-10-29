@@ -8,6 +8,8 @@ if [ $# -eq 0 ]; then
 fi
 
 # ##### Add users to LDAP ###### #
+echo ""
+echo "Adding users to LDAP"
 
 host=$(docker stack ps ${STACK_NAME} | grep -v Shutdown | grep Running | grep openldap | awk '{ print $4 }')
 #echo Host=$host
@@ -31,12 +33,12 @@ fi
 # read variables, for mail data path
 . .env
 # Replace Mail data path for users
-find images/rpi-openldap/users -type f -exec \
+find images/openldap/users -type f -exec \
      sed -i "s/\${MAIL_DATA_PATH}/${MAIL_DATA_PATH//\//\\/}/g" {} \;
 
 echo Copying user files to Host $host
 ssh $host "mkdir -p /tmp/users"
-scp -r images/rpi-openldap/users/userimport*.ldif $host:/tmp/users/
+scp -r images/openldap/users/userimport*.ldif $host:/tmp/users/
 
 echo Copying user files to Container $container in Host $host
 ssh $host "docker cp /tmp/users $container:/tmp/"

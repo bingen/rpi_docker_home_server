@@ -2,8 +2,8 @@ version: '3.1'
 services:
   openldap:
     build:
-      context: ./images/rpi-openldap/
-    image: bingen/rpi-openldap:latest
+      context: ./images/openldap/
+    image: bingen/${ARCH}-openldap:latest
     deploy:
       placement:
         constraints:
@@ -44,15 +44,15 @@ services:
 
   db:
     build:
-      context: ./images/rpi-mariadb/
-    image: bingen/rpi-mariadb:latest
+      context: ./images/mariadb/
+    image: bingen/${ARCH}-mariadb:latest
     secrets:
       - source: db_pwd
         target: admin_pwd
         mode: 0440
-    environment:
-      - MYSQL_ROOT_PWD_FILE=/run/secrets/admin_pwd
     #container_name: mariadb
+    env_file:
+      - mariadb.env
     networks:
       - default
     #ports:
@@ -63,8 +63,8 @@ services:
 
   haproxy:
     build:
-      context: ./images/rpi-haproxy/
-    image: bingen/rpi-haproxy:latest
+      context: ./images/haproxy/
+    image: bingen/${ARCH}-haproxy:latest
     depends_on:
       # For DNS resolution
       - nextcloud
@@ -81,8 +81,8 @@ services:
       - ${LETSENCRYPT_VOLUME_PATH}:/etc/letsencrypt
   mail:
     build:
-      context: ./images/rpi-email/
-    image: bingen/rpi-mailserver:latest
+      context: ./images/email/
+    image: bingen/${ARCH}-mailserver:latest
     depends_on:
       - openldap
     secrets:
@@ -109,16 +109,16 @@ services:
 
   nextcloud:
     build:
-      context: ./images/rpi-nextcloud/
+      context: ./images/nextcloud/
       args:
         - NEXTCLOUD_VERSION=${NEXTCLOUD_VERSION}
         - NEXTCLOUD_DATA_PATH=${NEXTCLOUD_DATA_PATH}
         - NEXTCLOUD_BACKUP_PATH=${NEXTCLOUD_BACKUP_PATH}
-    image: bingen/rpi-nextcloud:latest
-    deploy:
-      placement:
-        constraints:
-          - node.role == worker
+    image: bingen/${ARCH}-nextcloud:latest
+#    deploy:
+#      placement:
+#        constraints:
+#          - node.role == worker
     depends_on:
       - db
       - openldap
@@ -156,8 +156,8 @@ services:
 
   sftp:
     build:
-      context: ./images/rpi-sftp/
-    image: bingen/rpi-sftp
+      context: ./images/sftp/
+    image: bingen/${ARCH}-sftp
     ports:
       - "1022:22"
     volumes:
@@ -172,8 +172,8 @@ services:
 
   gogs:
     build:
-      context: ./images/rpi-gogs/
-    image: bingen/rpi-gogs
+      context: ./images/gogs/
+    image: bingen/${ARCH}-gogs
     depends_on:
       - db
       - openldap
@@ -199,7 +199,7 @@ services:
         mode: 0440
 
   pihole:
-    image: pihole/pihole:v4.0_armhf
+    image: pihole/pihole:latest
     deploy:
       placement:
         constraints:

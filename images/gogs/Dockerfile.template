@@ -1,15 +1,15 @@
-FROM resin/raspberrypi3-debian:latest
+FROM BASE_IMAGE_PLACEHOLDER
 
 ENV GO_VERSION 1.9
 ENV GO_OS linux
-ENV GO_ARCH armv6l
+ENV GO_ARCH GO_ARCH_PLACEHOLDER
 ENV GOGS_CUSTOM /data/gogs
 ENV GIT_HOME /home/git
 
 # Install dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       git wget openssh-server mariadb-client \
+       git wget ca-certificates openssh-server mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /data/gogs/data \

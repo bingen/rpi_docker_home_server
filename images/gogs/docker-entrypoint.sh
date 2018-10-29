@@ -36,6 +36,8 @@ GOGS_DB_USER, GOGS_DB_PWD, GOGS_ADMIN_PWD, ADMIN_EMAIL and LDAP stuff";
     exit 1;
 fi
 
+GOGS_PATH=${GOPATH}/src/github.com/gogs/gogs
+
 function check_result {
     if [ $1 != 0 ]; then
         echo "Error: $2";
@@ -46,6 +48,7 @@ function check_result {
 # ### DB setup ###
 
 # wait for DB to be ready
+sleep 60 # to avoid hitting it while the first start for setting root pwd
 R=111
 while [ $R -eq 111 ]; do
     mysql -u root -p${MYSQL_ROOT_PWD} -h ${DB_HOST} -e "SHOW DATABASES"  2> /dev/null;
@@ -87,7 +90,7 @@ service ssh start
 # SSH certs
 if [[ ! -e ${GOGS_CUSTOM}/https/cert.pem || ! -e ${GOGS_CUSTOM}/https/key.pem ]]; then
     su git -c "mkdir -p ${GOGS_CUSTOM}/https"
-    su git -c "cd ${GOGS_CUSTOM}/https && ${GOPATH}/src/github.com/gogits/gogs/gogs cert --ca=true --duration=8760h0m0s --host=${GOGS_DOMAIN} && cd -"
+    su git -c "cd ${GOGS_CUSTOM}/https && ${GOGS_PATH}/gogs cert --ca=true --duration=8760h0m0s --host=${GOGS_DOMAIN} && cd -"
 fi
 
 # ### Conf file ###
@@ -97,7 +100,7 @@ CONF_FILE=${GOGS_CUSTOM}/conf/app.ini
 # We need to re-generate conf file because we are changing DB pwd
 #if [[ ! -e ${CONF_FILE} ]]; then
 su git -c "mkdir -p ${GOGS_CUSTOM}/conf"
-mv ${GOPATH}/src/github.com/gogits/gogs/custom/conf/app.ini ${CONF_FILE}
+mv ${GOGS_PATH}/custom/conf/app.ini ${CONF_FILE}
 
 echo Setting domain
 sed -i "s/GOGS_DOMAIN/${GOGS_DOMAIN}/g" ${CONF_FILE}
@@ -114,7 +117,7 @@ sed -i "s/GOGS_DB_PWD/${GOGS_DB_PWD//\//\\/}/g" ${CONF_FILE}
 LDAP_FILE=${GOGS_CUSTOM}/conf/auth.d/ldap.conf
 #if [[ ! -e ${CONF_FILE} ]]; then
 su git -c "mkdir -p ${GOGS_CUSTOM}/conf/auth.d"
-mv ${GOPATH}/src/github.com/gogits/gogs/custom/conf/auth.d/ldap.conf ${LDAP_FILE}
+mv ${GOGS_PATH}/custom/conf/auth.d/ldap.conf ${LDAP_FILE}
 
 echo Setting LDAP conf
 sed -i "s/LDAP_SERVER_HOST/${LDAP_SERVER_HOST}/g" ${LDAP_FILE}
@@ -125,9 +128,9 @@ sed -i "s/LDAP_SEARCH_BASE/${LDAP_SEARCH_BASE}/g" ${LDAP_FILE}
 
 # Create admin user if DB was new
 if [ -z "${DB_EXISTS}" ]; then
-    su -c git "${GOPATH}/src/github.com/gogits/gogs/gogs admin create-user --name admin --password ${GOGS_ADMIN_PWD} --admin --email ${ADMIN_EMAIL}"
+    su -c git "${GOGS_PATH}/gogs admin create-user --name admin --password ${GOGS_ADMIN_PWD} --admin --email ${ADMIN_EMAIL}"
 fi
 
 #exec "$@"
-#exec gosu git ${GOPATH}/src/github.com/gogits/gogs/gogs web
-exec su git -c "${GOPATH}/src/github.com/gogits/gogs/gogs web"
+#exec gosu git ${GOGS_PATH}/gogs web
+exec su git -c "${GOGS_PATH}/gogs web"
