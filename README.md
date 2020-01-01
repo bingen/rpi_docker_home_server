@@ -1,3 +1,5 @@
+:warning: Deprecated, moved to https://gitlab.com/bingen/rpi_docker_home_server
+
 # Docker Home Server for Raspberry Pi
 
 Flash Hypriot
